@@ -27,27 +27,27 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import java.io.IOException;
 
-import static com.alibaba.nacos.config.server.utils.LogUtil.defaultLog;
+import static com.alibaba.nacos.config.server.utils.LogUtil.DEFAULT_LOG;
 
 /**
- * encode filter
+ * Web encode filter.
  *
  * @author Nacos
  */
 public class NacosWebFilter implements Filter {
     
-    static private String webRootPath;
+    private static String webRootPath;
     
-    static public String rootPath() {
+    public static String rootPath() {
         return webRootPath;
     }
     
     /**
-     * 方便测试
+     * Easy for testing.
      *
-     * @param path web path
+     * @param path web path.
      */
-    static public void setWebRootPath(String path) {
+    public static void setWebRootPath(String path) {
         webRootPath = path;
     }
     
@@ -66,7 +66,7 @@ public class NacosWebFilter implements Filter {
         try {
             chain.doFilter(request, response);
         } catch (IOException | ServletException ioe) {
-            defaultLog.debug("Filter catch exception, " + ioe.toString(), ioe);
+            DEFAULT_LOG.debug("Filter catch exception, " + ioe.toString(), ioe);
             throw ioe;
         }
     }
@@ -74,5 +74,4 @@ public class NacosWebFilter implements Filter {
     @Override
     public void destroy() {
     }
-    
 }

@@ -17,6 +17,8 @@
 package com.alibaba.nacos.config.server.result.core;
 
 /**
+ * IResultCode.
+ *
  * @author klw
  * @ClassName: IResultCode
  * @Description: result code enum needs to be implemented this interface
@@ -25,22 +27,16 @@ package com.alibaba.nacos.config.server.result.core;
 public interface IResultCode {
     
     /**
-     * get the result code
+     * Get the result code.
      *
-     * @return java.lang.String
-     * @author klw
-     * @Date 2019/6/28 14:56
-     * @Param []
+     * @return code value.
      */
     int getCode();
     
     /**
-     * get the result code's message
+     * Get the result code's message.
      *
-     * @return java.lang.String
-     * @author klw
-     * @Date 2019/6/28 14:56
-     * @Param []
+     * @return code's message.
      */
     String getCodeMsg();
 }

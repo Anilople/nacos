@@ -35,6 +35,8 @@ import java.util.ArrayList;
 import static com.alibaba.nacos.config.server.service.repository.RowMapperManager.USER_ROW_MAPPER;
 
 /**
+ * Implemetation of ExternalUserPersistServiceImpl.
+ *
  * @author <a href="mailto:liaochuntao@live.com">liaochuntao</a>
  */
 @Conditional(value = ConditionOnExternalStorage.class)
@@ -51,47 +53,70 @@ public class ExternalUserPersistServiceImpl implements UserPersistService {
         jt = persistService.getJdbcTemplate();
     }
     
+    /**
+     * Execute create user operation.
+     *
+     * @param username username string value.
+     * @param password password string value.
+     */
     public void createUser(String username, String password) {
         String sql = "INSERT into users (username, password, enabled) VALUES (?, ?, ?)";
         
         try {
             jt.update(sql, username, password, true);
         } catch (CannotGetJdbcConnectionException e) {
-            LogUtil.fatalLog.error("[db-error] " + e.toString(), e);
+            LogUtil.FATAL_LOG.error("[db-error] " + e.toString(), e);
             throw e;
         }
     }
     
+    /**
+     * Execute delete user operation.
+     *
+     * @param username username string value.
+     */
     public void deleteUser(String username) {
         String sql = "DELETE from users WHERE username=?";
         try {
             jt.update(sql, username);
         } catch (CannotGetJdbcConnectionException e) {
-            LogUtil.fatalLog.error("[db-error] " + e.toString(), e);
+            LogUtil.FATAL_LOG.error("[db-error] " + e.toString(), e);
             throw e;
         }
     }
     
+    /**
+     * Execute update user password operation.
+     *
+     * @param username username string value.
+     * @param password password string value.
+     */
     public void updateUserPassword(String username, String password) {
         try {
             jt.update("UPDATE users SET password = ? WHERE username=?", password, username);
         } catch (CannotGetJdbcConnectionException e) {
-            LogUtil.fatalLog.error("[db-error] " + e.toString(), e);
+            LogUtil.FATAL_LOG.error("[db-error] " + e.toString(), e);
             throw e;
         }
     }
     
+    /**
+     * Execute find user by username operation.
+     *
+     * @param username username string value.
+     * @return User model.
+     */
     public User findUserByUsername(String username) {
         String sql = "SELECT username,password FROM users WHERE username=? ";
         try {
             return this.jt.queryForObject(sql, new Object[] {username}, USER_ROW_MAPPER);
         } catch (CannotGetJdbcConnectionException e) {
-            LogUtil.fatalLog.error("[db-error] " + e.toString(), e);
+            LogUtil.FATAL_LOG.error("[db-error] " + e.toString(), e);
             throw e;
         } catch (EmptyResultDataAccessException e) {
             return null;
         } catch (Exception e) {
-            LogUtil.fatalLog.error("[db-other-error]" + e.getMessage(), e);
+            LogUtil.FATAL_LOG.error("[db-other-error]" + e.getMessage(), e);
             throw new RuntimeException(e);
         }
     }
@@ -116,10 +141,8 @@ public class ExternalUserPersistServiceImpl implements UserPersistService {
             }
             return pageInfo;
         } catch (CannotGetJdbcConnectionException e) {
-            LogUtil.fatalLog.error("[db-error] " + e.toString(), e);
+            LogUtil.FATAL_LOG.error("[db-error] " + e.toString(), e);
             throw e;
         }
     }
-    
-    
 }

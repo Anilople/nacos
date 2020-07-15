@@ -34,6 +34,8 @@ import java.util.ArrayList;
 import static com.alibaba.nacos.config.server.service.repository.RowMapperManager.PERMISSION_ROW_MAPPER;
 
 /**
+ * Implemetation of ExternalPermissionPersistServiceImpl.
+ *
  * @author <a href="mailto:liaochuntao@live.com">liaochuntao</a>
  */
 @Conditional(value = ConditionOnExternalStorage.class)
@@ -76,11 +78,18 @@ public class ExternalPermissionPersistServiceImpl implements PermissionPersistSe
             return pageInfo;
             
         } catch (CannotGetJdbcConnectionException e) {
-            LogUtil.fatalLog.error("[db-error] " + e.toString(), e);
+            LogUtil.FATAL_LOG.error("[db-error] " + e.toString(), e);
             throw e;
         }
     }
     
+    /**
+     * Execute add permission operation.
+     *
+     * @param role role string value.
+     * @param resource resource string value.
+     * @param action action string value.
+     */
     public void addPermission(String role, String resource, String action) {
         
         String sql = "INSERT into permissions (role, resource, action) VALUES (?, ?, ?)";
@@ -88,18 +97,25 @@ public class ExternalPermissionPersistServiceImpl implements PermissionPersistSe
         try {
             jt.update(sql, role, resource, action);
         } catch (CannotGetJdbcConnectionException e) {
-            LogUtil.fatalLog.error("[db-error] " + e.toString(), e);
+            LogUtil.FATAL_LOG.error("[db-error] " + e.toString(), e);
             throw e;
         }
     }
     
+    /**
+     * Execute delete permission operation.
+     *
+     * @param role role string value.
+     * @param resource resource string value.
+     * @param action action string value.
+     */
     public void deletePermission(String role, String resource, String action) {
         
         String sql = "DELETE from permissions WHERE role=? and resource=? and action=?";
         try {
             jt.update(sql, role, resource, action);
         } catch (CannotGetJdbcConnectionException e) {
-            LogUtil.fatalLog.error("[db-error] " + e.toString(), e);
+            LogUtil.FATAL_LOG.error("[db-error] " + e.toString(), e);
             throw e;
         }
     }

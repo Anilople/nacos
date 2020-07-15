@@ -16,12 +16,14 @@
 
 package com.alibaba.nacos.config.server.model.event;
 
-import com.alibaba.nacos.core.notify.Event;
+import com.alibaba.nacos.common.notify.Event;
 
 /**
+ * ConfigDumpEvent.
+ *
  * @author <a href="mailto:liaochuntao@live.com">liaochuntao</a>
  */
-public class ConfigDumpEvent implements Event {
+public class ConfigDumpEvent extends Event {
     
     private static final long serialVersionUID = -8776888606458370294L;
     
@@ -221,6 +223,11 @@ public class ConfigDumpEvent implements Event {
             return this;
         }
         
+        /**
+         * Build a configDumpEvent.
+         *
+         * @return ConfigDumpEvent object instance.
+         */
         public ConfigDumpEvent build() {
             ConfigDumpEvent configDumpEvent = new ConfigDumpEvent();
             configDumpEvent.setRemove(remove);

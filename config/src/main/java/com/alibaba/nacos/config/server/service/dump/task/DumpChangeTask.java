@@ -14,13 +14,21 @@
  * limitations under the License.
  */
 
-package com.alibaba.nacos.core.notify;
+package com.alibaba.nacos.config.server.service.dump.task;
+
+import com.alibaba.nacos.config.server.manager.AbstractTask;
 
 /**
- * this event share one event-queue.
+ * Dump change task.
  *
- * @author <a href="mailto:liaochuntao@live.com">liaochuntao</a>
+ * @author Nacos
+ * @date 2020/7/5 12:19 PM
  */
-public interface SlowEvent extends Event {
-
+public class DumpChangeTask extends AbstractTask {
+    
+    @Override
+    public void merge(AbstractTask task) {
+    }
+    
+    public static final String TASK_ID = "dumpChangeConfigTask";
 }

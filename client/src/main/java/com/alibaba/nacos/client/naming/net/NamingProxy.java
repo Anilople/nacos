@@ -56,8 +56,6 @@ import org.apache.http.HttpStatus;
 
 import java.io.IOException;
 import java.io.StringReader;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -81,7 +79,7 @@ import static com.alibaba.nacos.client.utils.LogUtils.NAMING_LOGGER;
  */
 public class NamingProxy implements Closeable {
     
-    private final NacosRestTemplate nacosRestTemplate = NamingHttpClientManager.getNacosRestTemplate();
+    private final NacosRestTemplate nacosRestTemplate = NamingHttpClientManager.getInstance().getNacosRestTemplate();
     
     private static final int DEFAULT_SERVER_PORT = 8848;
     
@@ -418,11 +416,7 @@ public class NamingProxy implements Closeable {
         Map<String, String> params = new HashMap<String, String>(8);
         Map<String, String> bodyMap = new HashMap<String, String>(2);
         if (!lightBeatEnabled) {
-            try {
-                bodyMap.put("beat", URLEncoder.encode(JacksonUtils.toJson(beatInfo), "UTF-8"));
-            } catch (UnsupportedEncodingException e) {
-                throw new NacosException(NacosException.SERVER_ERROR, "encode beatInfo error", e);
-            }
+            bodyMap.put("beat", JacksonUtils.toJson(beatInfo));
         }
         params.put(CommonParams.NAMESPACE_ID, namespaceId);
         params.put(CommonParams.SERVICE_NAME, beatInfo.getServiceName());
@@ -480,7 +474,7 @@ public class NamingProxy implements Closeable {
         String result = reqApi(UtilAndComs.nacosUrlBase + "/service/list", params, HttpMethod.GET);
         
         JsonNode json = JacksonUtils.toObj(result);
-        ListView<String> listView = new ListView<>();
+        ListView<String> listView = new ListView<String>();
         listView.setCount(json.get("count").asInt());
         listView.setData(JacksonUtils.toObj(json.get("doms").toString(), new TypeReference<List<String>>() {
         }));
@@ -597,7 +591,7 @@ public class NamingProxy implements Closeable {
             if (!curServer.contains(UtilAndComs.SERVER_ADDR_IP_SPLITER)) {
                 curServer = curServer + UtilAndComs.SERVER_ADDR_IP_SPLITER + serverPort;
             }
-            url = NamingHttpClientManager.getPrefix() + curServer + api;
+            url = NamingHttpClientManager.getInstance().getPrefix() + curServer + api;
         }
         
         try {
@@ -720,6 +714,7 @@ public class NamingProxy implements Closeable {
         String className = this.getClass().getName();
         NAMING_LOGGER.info("{} do shutdown begin", className);
         ThreadUtils.shutdownThreadPool(executorService, NAMING_LOGGER);
+        NamingHttpClientManager.getInstance().shutdown();
         NAMING_LOGGER.info("{} do shutdown stop", className);
     }
 }
